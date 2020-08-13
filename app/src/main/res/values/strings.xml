@@ -4,4 +4,6 @@
     <string name="input_summoner_name">Please input your Summoner name</string>
 
     <string name="enter">Enter</string>
+
+    <string name="not_exist_summoner">Please check summoner nickname.</string>
 </resources>

@@ -2,6 +2,10 @@ package com.example.lol_battlerecode;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 import android.view.View;
@@ -9,8 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.lol_battlerecode.model.SummonerIDInfo;
+
+import javax.crypto.Mac;
 
 public class MainActivity extends AppCompatActivity {
+
+    MainActivityviewmodel viewModel;
     ConstraintLayout info_layout;
     ConstraintLayout input_layout;
     ImageView dia;
@@ -27,6 +38,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        viewModel = ViewModelProviders.of(this).get(MainActivityviewmodel.class);
+
+        viewModel.getSummonerIDInfoLiveData().observe(this, new Observer<SummonerIDInfo>() {
+            @Override
+            public void onChanged(SummonerIDInfo summonerIDInfo) {
+                if (summonerIDInfo == null){
+                    Toast notExistToast = Toast.makeText(getApplicationContext(),"",Toast.LENGTH_SHORT);
+                    notExistToast.show();
+                }
+            }
+        });
         info_layout = findViewById(R.id.info_layout);
         dia = findViewById(R.id.dia);
         tv_summoner_name = findViewById(R.id.tv_summoner_name);
@@ -42,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         btn_input_summoner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                viewModel.searchSummoner(et_TextSummoner.getText().toString());
             }
         });
     }

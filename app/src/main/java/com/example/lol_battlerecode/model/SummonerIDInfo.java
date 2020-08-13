@@ -1,8 +1,7 @@
 package com.example.lol_battlerecode.model;
 
 import com.google.gson.annotations.SerializedName;
-
-public class summoneridfo {
+public class SummonerIDInfo {
     @SerializedName("id")
     private String id;
 
