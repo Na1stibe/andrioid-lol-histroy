@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="2dp"
+    android:layout_marginBottom="2dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <LinearLayout
@@ -30,8 +32,62 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textColor="@color/colorWhite"
-            android:textSize="20sp"
+            android:textSize="13sp"
             android:text="1557"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_game_type"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toRightOf="@+id/result_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:text="RANKED_GOLD_5X5"/>
+    <ImageView
+        android:id="@+id/tv_champion_portrait"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_game_type"
+        app:layout_constraintLeft_toLeftOf="@id/tv_game_type"
+        android:src="@drawable/aatrox"/>
+    <ImageView
+        android:id="@+id/iv_summoner_spell_1"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintLeft_toRightOf="@id/tv_champion_portrait"
+        app:layout_constraintTop_toTopOf="@id/tv_champion_portrait"
+        android:src="@drawable/spell_flash"/>
+    <ImageView
+        android:id="@+id/iv_summoner_spell_2"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintLeft_toRightOf="@id/tv_champion_portrait"
+        app:layout_constraintBottom_toBottomOf="@id/tv_champion_portrait"
+        android:src="@drawable/spell_flash"/>
+    <ImageView
+        android:id="@+id/iv_keystone_rune"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintLeft_toRightOf="@id/iv_summoner_spell_1"
+        app:layout_constraintTop_toTopOf="@id/tv_champion_portrait"
+        android:src="@drawable/keystone_rune"/>
+    <ImageView
+        android:id="@+id/iv_secondary_rune"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintLeft_toRightOf="@id/iv_summoner_spell_2"
+        app:layout_constraintBottom_toBottomOf="@id/tv_champion_portrait"
+        android:src="@drawable/secondary_rune"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
