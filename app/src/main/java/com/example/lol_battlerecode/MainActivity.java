@@ -16,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lol_battlerecode.model.SummonerIDInfo;
+import com.example.lol_battlerecode.model.SummonerRankInfo;
+
+import java.util.Locale;
 
 import javax.crypto.Mac;
 
@@ -45,8 +48,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(SummonerIDInfo summonerIDInfo) {
                 if (summonerIDInfo == null){
-                    Toast notExistToast = Toast.makeText(getApplicationContext(),"",Toast.LENGTH_SHORT);
+                    Toast notExistToast = Toast.makeText(getApplicationContext(),"Summoner name does not exist,",Toast.LENGTH_SHORT);
                     notExistToast.show();
+                }
+            }
+        });
+
+        viewModel.getSummonerRankInfoLiveData().observe(this, new Observer<SummonerRankInfo>() {
+            @Override
+            public void onChanged(SummonerRankInfo summonerRankInfo) {
+                if(summonerRankInfo != null){
+                    input_layout.setVisibility(View.GONE);
+                    setRankInfo(summonerRankInfo);
                 }
             }
         });
@@ -68,5 +81,70 @@ public class MainActivity extends AppCompatActivity {
                 viewModel.searchSummoner(et_TextSummoner.getText().toString());
             }
         });
+    }
+
+    private  void setRankInfo(SummonerRankInfo summonerRankInfo){
+        setTierEmblem(summonerRankInfo.getTier());
+        tv_summoner_name.setText(summonerRankInfo.getSummonerName());
+        String tierRank = summonerRankInfo.getTier() + "" + summonerRankInfo.getRank();
+        tier.setText(tierRank);
+        if (summonerRankInfo.getTier().equals("UNRANKED")){
+            game.setText("");
+            lp.setText("");
+            win_rate.setText("");
+            win_lose.setText("");
+        }
+        else{
+            game.setText(summonerRankInfo.getQueueType());
+            String point = String.valueOf(summonerRankInfo.getLeaguePoints()) + "LP";
+            lp.setText(String.valueOf(point));
+
+            double rate = (double) summonerRankInfo.getWins() / (double) (summonerRankInfo.getLosses() + summonerRankInfo.getWins()) * 100;
+            win_rate.setText(String.format(Locale.getDefault(), "%.2f%%", rate));
+
+
+            String winAndLosses = summonerRankInfo.getWins()
+                    +getResources().getString(R.string.win) + " "
+                    + summonerRankInfo.getLosses()
+                    +getResources().getString(R.string.defeat);
+            win_lose.setText(winAndLosses);
+
+        }
+        info_layout.setVisibility(View.VISIBLE);
+
+
+    }
+    private void setTierEmblem(String tier){
+        switch (tier){
+            case "UNRANKED" :
+                dia.setImageResource(R.drawable.emblem_unranked);
+            case "IRON":
+            dia.setImageResource(R.drawable.emblem_iron);
+                break;
+            case  "BRONZE":
+            dia.setImageResource(R.drawable.emblem_bronze);
+                break;
+            case  "SILVER":
+            dia.setImageResource(R.drawable.emblem_silver);
+                break;
+            case  "GOLD":
+            dia.setImageResource(R.drawable.emblem_gold);
+                break;
+            case  "PLATINUM":
+            dia.setImageResource(R.drawable.emblem_platinum);
+                break;
+            case  "DIAMOND":
+            dia.setImageResource(R.drawable.emblem_diamond);
+                break;
+            case  "MASTER":
+            dia.setImageResource(R.drawable.emblem_master);
+                break;
+            case  "GRANDMASTER":
+            dia.setImageResource(R.drawable.emblem_grandmaster);
+                break;
+            case  "CHALLENGER":
+            dia.setImageResource(R.drawable.emblem_challenger);
+                break;
+        }
     }
 }
