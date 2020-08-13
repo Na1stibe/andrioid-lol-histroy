@@ -106,7 +106,7 @@
         android:id="@+id/iv_item_0"
         android:layout_width="23dp"
         android:layout_height="23dp"
-        app:layout_constraintHorizontal_chainStyle="packed"o
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toRightOf="@id/iv_keystone_rune"
         app:layout_constraintTop_toBottomOf="@id/kda"
         app:layout_constraintBottom_toBottomOf="parent"

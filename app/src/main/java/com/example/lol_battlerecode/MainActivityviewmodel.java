@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.lol_battlerecode.model.Match_List;
 import com.example.lol_battlerecode.model.SummonerIDInfo;
 import com.example.lol_battlerecode.model.SummonerRankInfo;
 import com.example.lol_battlerecode.retro.APIClient;
@@ -61,6 +62,7 @@ public class MainActivityviewmodel extends ViewModel {
                         summonerIDInfo = idInfo;
                         summonerName = idInfo.getName();
                         getSummonerRankInfo(idInfo.getId());
+                        getMatchHistoryList(idInfo.getAccountid());
                         Log.d("TESTLOG", "[getSummonerIDInfo] id: " + idInfo.getId());
                     }
 
@@ -94,6 +96,35 @@ public class MainActivityviewmodel extends ViewModel {
                     }
                 });
 
+    }
+
+    private void getMatchHistoryList(String accountId){
+        riotAPI.getMatchHistoryList(accountId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Match_List>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Match_List match_list) {
+                        int count = 0;
+                        for (Match_List.Match match : match_list.getMatches()){
+                            if (count <15){
+                                Log.d( "TESTLOG", "matchId " +count + ":" +match.getGameId());
+                                count++;
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("TESTLOG","[getMatchHistoryList] exception:" +e);
+                    }
+                });
     }
     private void setSummonerRankInfo(List<SummonerRankInfo> summonerRankInfos){
         SummonerRankInfo soloRankInfo = null;

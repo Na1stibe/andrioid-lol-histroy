@@ -86,7 +86,7 @@
             android:textSize="13sp"
             android:text="289승 292패"/>
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe+layout"
+            android:id="@+id/swipelayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="15dp"

@@ -5,13 +5,13 @@ public class SummonerIDInfo {
     @SerializedName("id")
     private String id;
 
-    @SerializedName("accountid")
+    @SerializedName("accountId")
     private  String accountid;
 
     @SerializedName("name")
     private String name;
 
-    @SerializedName("summonerlevel")
+    @SerializedName("summonerLevel")
     private int summonerlevel;
 
     public String getId() {
