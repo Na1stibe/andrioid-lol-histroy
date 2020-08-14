@@ -3,7 +3,7 @@ package com.example.lol_battlerecode.retro;
 public class BaseUrl {
     static final String RIOT_API_BASE_URL = "https://kr.api.riotgames.com/";
     // Riot API Key 입력
-    static final String RIOT_API_KEY = "RGAPI-85e4556a-5c9c-406b-9a01-5d3086aaf431";
+    static final String RIOT_API_KEY = "RGAPI-62e9c3e3-62e9-4a05-8422-d5cdc438b04a";
 
     static final String RIOT_API_GET_SUMMONER_BY_ENCRYPTION_SUMMONER_ID = "lol/summoner/v4/summoners/";
     static final String RIOT_API_GET_SUMMONER = "lol/summoner/v4/summoners/by-name/";

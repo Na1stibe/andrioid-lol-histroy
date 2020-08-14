@@ -9,4 +9,5 @@
 
     <string name="win">win</string>
     <string name="defeat">defeat</string>
+    <string name="history_error">Can not find matches history</string>
 </resources>

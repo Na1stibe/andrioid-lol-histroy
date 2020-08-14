@@ -5,12 +5,14 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.lol_battlerecode.model.MatchHistory;
 import com.example.lol_battlerecode.model.Match_List;
 import com.example.lol_battlerecode.model.SummonerIDInfo;
 import com.example.lol_battlerecode.model.SummonerRankInfo;
 import com.example.lol_battlerecode.retro.APIClient;
 import com.example.lol_battlerecode.retro.RiotAPI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.SingleObserver;
@@ -21,16 +23,19 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivityviewmodel extends ViewModel {
     private MutableLiveData<SummonerIDInfo> summonerIDInfoLiveData;
     private MutableLiveData<SummonerRankInfo> summonerRankInfoLiveData;
+    private MutableLiveData<HistoryAdapter> historyAdapterLiveData;
 
     private  String summonerName = "";
 
     private RiotAPI riotAPI = APIClient.getRiotClient().create(RiotAPI.class);
+    private ArrayList<MatchHistory>matchHistories = new ArrayList<>();
 
     private SummonerIDInfo summonerIDInfo = null;
 
     public MainActivityviewmodel() {
         summonerIDInfoLiveData = new MutableLiveData<>();
         summonerRankInfoLiveData = new MutableLiveData<>();
+        historyAdapterLiveData = new MutableLiveData<>();
     }
 
     public MutableLiveData<SummonerIDInfo> getSummonerIDInfoLiveData(){
@@ -41,8 +46,14 @@ public class MainActivityviewmodel extends ViewModel {
         return summonerRankInfoLiveData;
     }
 
+    public MutableLiveData<HistoryAdapter> getHistoryAdapterLiveData(){
+        return historyAdapterLiveData;
+    }
+
     public  void searchSummoner(String summonerName) {
         this.summonerName = summonerName;
+
+        matchHistories.clear();
 
         getSummonerIDInfo();
     }
@@ -113,7 +124,7 @@ public class MainActivityviewmodel extends ViewModel {
                         int count = 0;
                         for (Match_List.Match match : match_list.getMatches()){
                             if (count <15){
-                                Log.d( "TESTLOG", "matchId " +count + ":" +match.getGameId());
+                                getMatchHistory(match.getGameId(),accountId);
                                 count++;
                             }
                         }
@@ -123,6 +134,33 @@ public class MainActivityviewmodel extends ViewModel {
                     @Override
                     public void onError(Throwable e) {
                         Log.d("TESTLOG","[getMatchHistoryList] exception:" +e);
+                    }
+                });
+    }
+    private void getMatchHistory(String matchId, String accountId){
+        riotAPI.getMatchHistory(matchId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<MatchHistory>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(MatchHistory matchHistory) {
+                        matchHistories.add(matchHistory);
+                        if (matchHistories.size() > 14){
+                            HistoryAdapter historyAdapter
+                                    = new HistoryAdapter(matchHistories, accountId);
+                            historyAdapterLiveData.setValue(historyAdapter);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("TESTLOG", "[getMatchHistory] exception: " +e);
+                        historyAdapterLiveData.setValue(null);
                     }
                 });
     }

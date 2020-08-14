@@ -6,12 +6,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethod;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,13 +42,22 @@ public class MainActivity extends AppCompatActivity {
     TextView win_rate;
     TextView win_lose;
     EditText et_TextSummoner;
+
+    ProgressBar progressBar;
+
+    SwipeRefreshLayout swipeRefreshLayout;
+    RecyclerView historyList;
     Button btn_input_summoner;
+
+    InputMethodManager inputMethodManager;
+    boolean isVisibleInfoLayout = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
         viewModel = ViewModelProviders.of(this).get(MainActivityviewmodel.class);
 
         viewModel.getSummonerIDInfoLiveData().observe(this, new Observer<SummonerIDInfo>() {
@@ -50,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 if (summonerIDInfo == null){
                     Toast notExistToast = Toast.makeText(getApplicationContext(),"Summoner name does not exist,",Toast.LENGTH_SHORT);
                     notExistToast.show();
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
@@ -59,8 +76,27 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(SummonerRankInfo summonerRankInfo) {
                 if(summonerRankInfo != null){
                     input_layout.setVisibility(View.GONE);
+                    isVisibleInfoLayout = true;
                     setRankInfo(summonerRankInfo);
                 }
+                else{
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        viewModel.getHistoryAdapterLiveData().observe(this, new Observer<HistoryAdapter>() {
+            @Override
+            public void onChanged(HistoryAdapter historyAdapter) {
+                if (historyAdapter == null) {
+                    Toast historyErrorToast = Toast.makeText(getApplicationContext(),
+                            R.string.history_error,Toast.LENGTH_SHORT);
+                    historyErrorToast.show();
+                }else {
+                    historyList.setAdapter(historyAdapter);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                progressBar.setVisibility(View.GONE);
             }
         });
         info_layout = findViewById(R.id.info_layout);
@@ -72,16 +108,45 @@ public class MainActivity extends AppCompatActivity {
         win_rate = findViewById(R.id.win_rate);
         win_lose = findViewById(R.id.win_lose);
 
+        swipeRefreshLayout = findViewById(R.id.swipelayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                viewModel.searchSummoner(tv_summoner_name.getText().toString());
+            }
+        });
+        historyList = findViewById(R.id.rv_history);
+        historyList.setLayoutManager(new LinearLayoutManager(this));
+        historyList.setHasFixedSize(true);
+
         input_layout = findViewById(R.id.input_layout);
         et_TextSummoner = findViewById(R.id.et_input_summoner);
         btn_input_summoner = findViewById(R.id.btn_input_summoner);
         btn_input_summoner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
+                inputMethodManager
+                        .hideSoftInputFromWindow(swipeRefreshLayout.getWindowToken(), 0);
                 viewModel.searchSummoner(et_TextSummoner.getText().toString());
+                et_TextSummoner.setText("");
             }
         });
+        progressBar = findViewById(R.id.loading);
     }
+    @Override
+    public void onBackPressed(){
+        if (isVisibleInfoLayout){
+             info_layout.setVisibility(View.GONE);
+             input_layout.setVisibility(View.VISIBLE);
+             isVisibleInfoLayout = !isVisibleInfoLayout;
+        }else {
+            finish();
+
+        }
+    }
+
+
 
     private  void setRankInfo(SummonerRankInfo summonerRankInfo){
         setTierEmblem(summonerRankInfo.getTier());

@@ -5,14 +5,25 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class MatchHistory {
+    @SerializedName("queueId")
+    private int queueId;
+
+    public int getQueueId() {
+        return queueId;
+    }
+
+    public void setQueueId(int queueId) {
+        this.queueId = queueId;
+    }
+
     @SerializedName("gameId")
     private String gameId;
 
     @SerializedName("gameCreation")
-    private String gameCreation;
+    private long gameCreation;
 
     @SerializedName("gameDuration")
-    private  String gameDuration;
+    private long gameDuration;
 
     @SerializedName("participants")
     private ArrayList<Participants> participants = new ArrayList<>();
@@ -42,12 +53,12 @@ public class MatchHistory {
             this.spell2Id = spell2Id;
         }
 
-        public State getState() {
-            return state;
+        public Stats getStats() {
+            return stats;
         }
 
-        public void setState(State state) {
-            this.state = state;
+        public void setStats(Stats stats) {
+            this.stats = stats;
         }
 
         @SerializedName("championId")
@@ -60,9 +71,9 @@ public class MatchHistory {
         private int spell2Id;
 
         @SerializedName("stats")
-        private State state;
+        private Stats stats;
 
-        public static class State{
+        public static class Stats {
             @SerializedName("win")
             private boolean win;
 
@@ -208,7 +219,7 @@ public class MatchHistory {
         }
     }
 
-    @SerializedName("participantsIdentities")
+    @SerializedName("participantIdentities")
     private ArrayList<ParticipantsIdentities> participantsIdentities = new ArrayList<>();
 
     public static class ParticipantsIdentities {
@@ -267,19 +278,19 @@ public class MatchHistory {
         this.gameId = gameId;
     }
 
-    public String getGameCreation() {
+    public long getGameCreation() {
         return gameCreation;
     }
 
-    public void setGameCreation(String gameCreation) {
+    public void setGameCreation(long gameCreation) {
         this.gameCreation = gameCreation;
     }
 
-    public String getGameDuration() {
+    public long getGameDuration() {
         return gameDuration;
     }
 
-    public void setGameDuration(String gameDuration) {
+    public void setGameDuration(long gameDuration) {
         this.gameDuration = gameDuration;
     }
 

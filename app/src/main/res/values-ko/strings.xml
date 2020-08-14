@@ -7,4 +7,5 @@
     <string name="not_exist_summoner">소환사 이름을 다시 확인해주세요.</string>
     <string name="win">승</string>
     <string name="defeat">패</string>
+    <string name="history_error">대전기록을 찾지 못하였습니다.</string>
 </resources>
